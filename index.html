@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Opening in Obsidian...</title>
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var vault = params.get('vault') || 'agentic-vault';
+      var file = params.get('file');
+      if (!file) {
+        document.body.innerText = 'Missing file parameter.';
+        return;
+      }
+      var uri = 'obsidian://open?vault=' + encodeURIComponent(vault) + '&file=' + encodeURIComponent(file);
+      window.location = uri;
+    })();
+  </script>
+</head>
+<body>
+  <p>Opening in Obsidian...</p>
+</body>
+</html>
