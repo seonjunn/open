@@ -6,14 +6,15 @@
   <script>
     (function() {
       var params = new URLSearchParams(window.location.search);
-      var vault = params.get('vault') || 'agentic-vault';
+      var vault = params.get('vault');
       var file = params.get('file');
-      if (!file) {
-        document.body.innerText = 'Missing file parameter.';
+      if (!file || !vault) {
+        document.body.innerText = 'Missing required parameters.';
         return;
       }
       var uri = 'obsidian://open?vault=' + encodeURIComponent(vault) + '&file=' + encodeURIComponent(file);
       window.location = uri;
+      setTimeout(function() { window.close(); }, 500);
     })();
   </script>
 </head>
