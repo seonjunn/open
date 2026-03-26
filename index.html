@@ -3,22 +3,55 @@
 <head>
   <meta charset="utf-8">
   <title>Opening in Obsidian...</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #1a1a2e; color: #eee; flex-direction: column; gap: 16px; }
+    button { background: #7c3aed; color: white; border: none; padding: 12px 28px; border-radius: 8px; font-size: 16px; cursor: pointer; }
+    button:hover { background: #6d28d9; }
+    label { font-size: 13px; color: #aaa; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    p { color: #888; font-size: 14px; margin: 0; }
+  </style>
   <script>
     (function() {
       var params = new URLSearchParams(window.location.search);
       var vault = params.get('vault');
       var file = params.get('file');
       if (!file || !vault) {
-        document.body.innerText = 'Missing required parameters.';
+        document.addEventListener('DOMContentLoaded', function() {
+          document.getElementById('msg').innerText = 'Missing required parameters.';
+        });
         return;
       }
       var uri = 'obsidian://open?vault=' + encodeURIComponent(vault) + '&file=' + encodeURIComponent(file);
-      window.location = uri;
-      setTimeout(function() { window.close(); }, 500);
+
+      // 자동 열기 설정 확인
+      if (localStorage.getItem('obsidian_auto_open') === '1') {
+        window.location = uri;
+        setTimeout(function() { window.close(); }, 500);
+        return;
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('open-btn').style.display = 'inline-block';
+        document.getElementById('auto-label').style.display = 'flex';
+        document.getElementById('filename').innerText = decodeURIComponent(file);
+
+        document.getElementById('open-btn').addEventListener('click', function() {
+          if (document.getElementById('auto-check').checked) {
+            localStorage.setItem('obsidian_auto_open', '1');
+          }
+          window.location = uri;
+          setTimeout(function() { window.close(); }, 500);
+        });
+      });
     })();
   </script>
 </head>
 <body>
-  <p>Opening in Obsidian...</p>
+  <p id="filename" style="color:#aaa;font-size:13px;"></p>
+  <button id="open-btn" style="display:none">Obsidian에서 열기</button>
+  <label id="auto-label" style="display:none">
+    <input type="checkbox" id="auto-check"> 앞으로 자동으로 열기
+  </label>
+  <p id="msg" style="color:#555;font-size:13px;">Obsidian 앱이 설치되어 있어야 합니다.</p>
 </body>
 </html>
